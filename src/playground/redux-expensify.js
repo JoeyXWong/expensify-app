@@ -1,23 +1,8 @@
-<<<<<<< HEAD
-import { createStore, combineReducers } from 'redux';
-=======
 import {createStore, combineReducers} from 'redux';
->>>>>>> d017521d2996557405da633e15d9f8773900c4ad
 import uuid from 'uuid';
 
 //ADD_EXPENSE
 
-<<<<<<< HEAD
-const addExpense = (
-    { description = '', 
-    note = '', 
-    amount = 0, 
-    createdAt = 0
-    }={}
-    ) => ({
-    type: 'ADD_EXPENSE',
-    expense:{
-=======
 const addExpense = ({
                         description = '',
                         note = '',
@@ -26,7 +11,6 @@ const addExpense = ({
                     } = {}) => ({
     type: 'ADD_EXPENSE',
     expense: {
->>>>>>> d017521d2996557405da633e15d9f8773900c4ad
         id: uuid(),
         description,
         note,
@@ -34,10 +18,6 @@ const addExpense = ({
         createdAt
     }
 });
-<<<<<<< HEAD
-
-//REMOVE_EXPENSE
-=======
 //REMOVE_EXPENSE
 
 const removeExpense = ({
@@ -46,9 +26,20 @@ const removeExpense = ({
     type: 'REMOVE_EXPENSE',
     id
 });
->>>>>>> d017521d2996557405da633e15d9f8773900c4ad
 //EDIT_EXPENSE
+
+const editExpense = (id, updates) => ({
+    type: 'EDIT_EXPENSE',
+    id,
+    updates
+});
 //SET_TEXT_FILTER
+
+const setTextFilter = (text = '') => ({
+    type: 'SET_TEXT_FILTER',
+    text
+});
+
 //SORT_BY_DATE
 //SORT_BY_AMOUNT
 //SET_START_DATE
@@ -59,10 +50,6 @@ const removeExpense = ({
 
 const expensesReducerDefaultState = [];
 
-<<<<<<< HEAD
-const expensesReducer = (state= expensesReducerDefaultState, action) => {
-    switch (action.type) {
-=======
 const expensesReducer = (state = expensesReducerDefaultState, action) => {
     switch (action.type) {
         case 'ADD_EXPENSE':
@@ -70,8 +57,17 @@ const expensesReducer = (state = expensesReducerDefaultState, action) => {
         //return state.concat(action.expense); //concat does not mutate array
         case 'REMOVE_EXPENSE':
             return state.filter(({id}) => id !== action.id); //destructured id from expense object
-
->>>>>>> d017521d2996557405da633e15d9f8773900c4ad
+        case 'EDIT_EXPENSE':
+            return state.map((expense)=>{
+                if (expense.id === action.id) {
+                    return {
+                        ...expense,
+                        ...action.updates
+                    } 
+                } else {
+                    return expense;
+                }
+            });
         default:
             return state;
     }
@@ -86,12 +82,15 @@ const filtersReducerDefaultState = {
     endDate: undefined
 };
 
-<<<<<<< HEAD
-const filtersReducer = (state= filtersReducerDefaultState, action) => {
-=======
 const filtersReducer = (state = filtersReducerDefaultState, action) => {
->>>>>>> d017521d2996557405da633e15d9f8773900c4ad
     switch (action.type) {
+        case 'SET_TEXT_FILTER':
+           
+                return {
+                    ...state,
+                    text: action.text
+                };
+                
         default:
             return state
     }
@@ -106,9 +105,6 @@ const store = createStore(
     })
 );
 
-<<<<<<< HEAD
-console.log(store.getState());
-=======
 store.subscribe(() => {
     console.log(store.getState());
 });
@@ -117,7 +113,12 @@ const expenseOne = store.dispatch(addExpense({description: 'Rent', amount: 100})
 const expenseTwo = store.dispatch(addExpense({description: 'Coffee', amount: 200}));
 
 store.dispatch(removeExpense({id: expenseOne.expense.id}));
->>>>>>> d017521d2996557405da633e15d9f8773900c4ad
+
+store.dispatch(editExpense(expenseTwo.expense.id, {amount: 500}));
+
+console.log('FILTER-----------')
+store.dispatch(setTextFilter('rent'));
+store.dispatch(setTextFilter());
 
 const demoState = {
     expense: [{
@@ -135,3 +136,17 @@ const demoState = {
     }
 };
 
+const user = {
+    name: 'Jen',
+    age: 24
+};
+
+//declaring values after the spread operator means it gets overridden but doesnt mutate the 
+//original object.
+console.log({
+    ...user,
+    age: 27,
+    location: 'Philadelphia'
+});
+
+console.log(user);
