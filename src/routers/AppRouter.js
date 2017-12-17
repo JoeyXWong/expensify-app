@@ -10,7 +10,7 @@ import NotFoundPage from '../components/NotFoundPage.js';
 
 
 //switch statement used to handle 404, cannot have div inside.
-const AppRouter= (
+const AppRouter = () => (
     <BrowserRouter>
     <div>
     <Header />
